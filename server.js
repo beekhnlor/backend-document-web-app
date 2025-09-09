@@ -11,7 +11,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(morgan('dev'))
 app.use(cors({
-    origin:process.env.ORIGING,
+    origin:process.env.ORIGIN,
     methods:['POST','PUT','DELETE','GET','OPTIONS'],
     allowedHeaders:['Content-Type','Authorization']
 }))
