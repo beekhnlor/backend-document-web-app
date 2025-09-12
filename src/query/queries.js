@@ -43,10 +43,19 @@ const update = `
 
 const remove = `DELETE FROM tax_applications WHERE id = ?`;
 
+const register  = `INSERT INTO tb_users ( user_name,password ) VALUE (?,?)`
+
+const CheckUser = `SELECT user_name FROM tb_users WHERE user_name = ?`
+
+const login = `SELECT user_name,password FROM tb_users WHERE user_name = ?`
+
 module.exports = {
   create,
   read,
   readById,
   update,
-  remove
+  remove,
+  register,
+  CheckUser,
+  login
 };
