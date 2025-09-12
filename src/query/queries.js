@@ -49,6 +49,7 @@ const CheckUser = `SELECT user_name FROM tb_users WHERE user_name = ?`
 
 const login = `SELECT user_name,password FROM tb_users WHERE user_name = ?`
 
+
 module.exports = {
   create,
   read,
