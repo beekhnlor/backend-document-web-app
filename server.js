@@ -1,7 +1,4 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
-
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
@@ -20,7 +17,7 @@ app.use(cors({
 }))
 
 app.get('/', (req, res) => {
-  res.status(200).send('API is healthy and running!');
+  res.status(200).send('OK');
 });
 
 readdirSync('./src/routes').map((e)=>app.use('/api',require('./src/routes/' + e)))
