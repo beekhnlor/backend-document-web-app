@@ -118,8 +118,6 @@ const read = async (req, res) => {
     return res.status(500).json({ message: "Internal Sever Error" });
   }
 };
-
-
 const readById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -243,7 +241,6 @@ const update = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
 const remove = async (req, res) => {
   const { id } = req.params;
   try {
@@ -257,11 +254,48 @@ const remove = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+const uploadFlie = async(req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No files were uploaded." });
+    }
+    for (const file of req.files) {
+      const filename = file.filename;
 
+      await connected.query(queries.uploadFlie, [
+        filename,
+        new Date(),
+        new Date()
+      ]);
+    }
+
+    return res.status(201).json({ 
+      message: "Upload successful!",
+    });
+
+  } catch(err) {
+    console.log('Upload File Error', err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+const getFile = async(req,res)=>{
+  try{
+
+    const [ result ] = await connected.query(queries.getFile)
+
+    return res.status(200).json({result})
+
+  }catch(err){
+   console.log("Get File Error",err)
+   return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
 module.exports = {
   create,
   read,
   readById,
   update,
   remove,
+  uploadFlie,
+  getFile
 };

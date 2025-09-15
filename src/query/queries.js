@@ -55,6 +55,9 @@ const searchCompany = `SELECT * FROM tb_company WHERE company_name LIKE ?`
 
 const getRecentCompanies =`SELECT * FROM tb_company ORDER BY created_at DESC LIMIT 3`
 
+const uploadFlie = `INSERT INTO tb_file (files,created_at,updated_at) VALUE (?,?,?)`
+
+const getFile = `SELECT * FROM tb_file`
 
 module.exports = {
   create,
@@ -67,5 +70,7 @@ module.exports = {
   login,
   Company,
   searchCompany,
-  getRecentCompanies
+  getRecentCompanies,
+  uploadFlie,
+  getFile
 };
