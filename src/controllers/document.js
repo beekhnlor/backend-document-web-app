@@ -119,6 +119,7 @@ const read = async (req, res) => {
   }
 };
 
+
 const readById = async (req, res) => {
   const { id } = req.params;
   try {

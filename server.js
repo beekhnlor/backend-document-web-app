@@ -16,10 +16,6 @@ app.use(cors({
     allowedHeaders:['Content-Type','Authorization']
 }))
 
-app.get('/', (req, res) => {
-  res.status(200).send('OK');
-});
-
 readdirSync('./src/routes').map((e)=>app.use('/api',require('./src/routes/' + e)))
 
 app.listen(port,()=>console.log(`Server is running on port ${port} 🚀`))

@@ -49,6 +49,12 @@ const CheckUser = `SELECT user_name FROM tb_users WHERE user_name = ?`
 
 const login = `SELECT user_name,password FROM tb_users WHERE user_name = ?`
 
+const Company  = `INSERT INTO tb_company (company_name,	created_at,updated_at	) VALUE (?,?,?)`
+
+const searchCompany = `SELECT * FROM tb_company WHERE company_name LIKE ?`
+
+const getRecentCompanies =`SELECT * FROM tb_company ORDER BY created_at DESC LIMIT 3`
+
 
 module.exports = {
   create,
@@ -58,5 +64,8 @@ module.exports = {
   remove,
   register,
   CheckUser,
-  login
+  login,
+  Company,
+  searchCompany,
+  getRecentCompanies
 };
