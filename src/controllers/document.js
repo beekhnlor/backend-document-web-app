@@ -263,12 +263,10 @@ const uploadFlie = async(req, res) => {
 
     for (const file of req.files) {
       const filename = file.filename;
-      const originalname = file.originalname; // << ดึงชื่อไฟล์เดิมมาใช้
 
       // ส่ง originalname เข้าไปด้วย
       await connected.query(queries.uploadFlie, [
         filename,
-        originalname,
         new Date(),
         new Date()
       ]);
