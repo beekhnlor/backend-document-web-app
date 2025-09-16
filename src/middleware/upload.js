@@ -15,7 +15,7 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
-const uploadDir = './src/uploads';
+const uploadDir = './data/uploads';
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|pdf/;

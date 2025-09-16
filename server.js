@@ -17,7 +17,7 @@ app.use(cors({
     allowedHeaders:['Content-Type','Authorization']
 }))
 
-app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+app.use('/uploads', express.static(path.join('/data', 'uploads')));
 
 readdirSync('./src/routes').map((e)=>app.use('/api',require('./src/routes/' + e)))
 
