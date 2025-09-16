@@ -58,6 +58,9 @@ const getRecentCompanies =`SELECT * FROM tb_company ORDER BY created_at DESC LIM
 const uploadFlie = `INSERT INTO tb_file (files,created_at,updated_at) VALUE (?,?,?)`
 
 const getFile = `SELECT * FROM tb_file`
+const deleteFile = `DELETE FROM tb_file WHERE id = ?`;
+const selectFileById = `SELECT files FROM tb_file WHERE id = ?`;
+
 
 module.exports = {
   create,
@@ -72,5 +75,7 @@ module.exports = {
   searchCompany,
   getRecentCompanies,
   uploadFlie,
-  getFile
+  getFile,
+  deleteFile,
+  selectFileById
 };

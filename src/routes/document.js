@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { create,read,readById,update,remove,uploadFlie,getFile } = require('../controllers/document')
+const { create,read,readById,update,remove,uploadFlie,getFile,deleteFile } = require('../controllers/document')
 const { register,login } = require('../controllers/auth')
 const { create_company,search_company } = require('../controllers/company')
 const { upload } = require('../middleware/upload')
@@ -21,6 +21,7 @@ router.get('/search',search_company)
 //
 router.post('/upload',upload,uploadFlie)
 router.get('/getupload',getFile)
+router.delete('/file/:id', deleteFile);
 
 module.exports = router
 

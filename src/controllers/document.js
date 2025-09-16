@@ -1,6 +1,7 @@
 const connected = require("../connectdb/connectingdb");
 const queries = require("../query/queries");
-
+const fs = require('fs');
+const path = require('path');
 const create = async (req, res) => {
   const {
     year_of_form,
@@ -259,11 +260,15 @@ const uploadFlie = async(req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: "No files were uploaded." });
     }
+
     for (const file of req.files) {
       const filename = file.filename;
+      const originalname = file.originalname; // << ดึงชื่อไฟล์เดิมมาใช้
 
+      // ส่ง originalname เข้าไปด้วย
       await connected.query(queries.uploadFlie, [
         filename,
+        originalname,
         new Date(),
         new Date()
       ]);
@@ -274,22 +279,64 @@ const uploadFlie = async(req, res) => {
     });
 
   } catch(err) {
-    console.log('Upload File Error', err);
+    console.error('Upload File Error', err);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }
+// ======================================================================
+
+// ======================= แก้ไขฟังก์ชัน getFile =======================
 const getFile = async(req,res)=>{
-  try{
-
-    const [ result ] = await connected.query(queries.getFile)
-
-    return res.status(200).json({result})
-
-  }catch(err){
-   console.log("Get File Error",err)
+  try {
+    // ดึงข้อมูลออกมาแล้วส่งกลับเป็น Array ตรงๆ
+    const [ files ] = await connected.query(queries.getFile);
+    return res.status(200).json(files); // << แก้ตรงนี้
+  } catch(err) {
+   console.error("Get File Error", err);
    return res.status(500).json({ message: "Internal Server Error" });
   }
 }
+// ======================================================================
+
+// ======================= แก้ไขฟังก์ชัน deleteFile =======================
+const deleteFile = async (req, res) => {
+  const { id } = req.params;
+  const connection = await connected.getConnection(); // ใช้ Transaction เพื่อความปลอดภัย
+
+  try {
+    await connection.beginTransaction();
+
+    // 1. ค้นหาชื่อไฟล์จาก ID ในฐานข้อมูลก่อน
+    const [fileRows] = await connection.query(queries.selectFileById, [id]);
+    
+    if (fileRows.length === 0) {
+      await connection.rollback();
+      return res.status(404).json({ message: "File not found in database" });
+    }
+    const filename = fileRows[0].files;
+
+    // 2. ลบข้อมูลออกจากฐานข้อมูล *ก่อน*
+    await connection.query(queries.deleteFile, [id]);
+
+    // 3. ลบไฟล์จริงๆ ออกจาก Folder 'uploads'
+    const filePath = path.resolve('./src/uploads', filename);
+    if (fs.existsSync(filePath)) {
+      await fs.promises.unlink(filePath);
+    } else {
+      console.warn(`File not found on disk, but DB entry removed: ${filename}`);
+    }
+
+    await connection.commit(); // ยืนยันการเปลี่ยนแปลงทั้งหมด
+    return res.status(200).json({ message: "File deleted successfully" });
+
+  } catch (err) {
+    await connection.rollback(); // ย้อนกลับถ้ามีข้อผิดพลาด
+    console.error("Delete File Error", err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    connection.release(); // คืน connection กลับสู่ pool
+  }
+};
 module.exports = {
   create,
   read,
@@ -297,5 +344,6 @@ module.exports = {
   update,
   remove,
   uploadFlie,
-  getFile
+  getFile,
+  deleteFile
 };
