@@ -3,7 +3,6 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const { readdirSync } = require('fs')
-const path = require('path')
 const port = process.env.PORT
 const app = express()
 
@@ -17,7 +16,7 @@ app.use(cors({
     allowedHeaders:['Content-Type','Authorization']
 }))
 
-app.use('/uploads', express.static(path.join('/data', 'uploads')));
+app.use('/uploads', express.static('/data/uploads'));
 
 readdirSync('./src/routes').map((e)=>app.use('/api',require('./src/routes/' + e)))
 
